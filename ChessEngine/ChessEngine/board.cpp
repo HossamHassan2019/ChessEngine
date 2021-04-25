@@ -16,6 +16,7 @@ unordered_map<char , int> Board::boardMap;
 string Board::lastColoredMove = "black";
 unordered_map<string , int> Board::whiteAttackCellsMap = {};
 unordered_map<string , int> Board::blackAttackCellsMap = {} ;
+
 void  Board::displayBoard(){
     /* Use monospaced font to view board as uppercase letters for white and lowercase for black */
 
@@ -44,7 +45,11 @@ void  Board::displayBoard(){
 
 
 
+/* initBoard function
 
+Description:
+   This function initializes all the pieces objects and initializes vectors and maps as well
+*/
 void Board::initBoard(){
     vector<Piece*> p{};
     for(int i = 0 ; i < 8 ; i++){
@@ -108,6 +113,13 @@ void Board::initBoard(){
     updateMaps();
 };
 
+
+
+/* clearAllVectors function
+
+Description:
+   This function clears all the vectors' values
+*/
 void  Board::clearAllVectors(void){
     for(int i = 0 ; i < BOARD_HEIGHT ; i++){
         for(int j= 0 ; j < BOARD_WIDTH ; j++){
@@ -123,11 +135,24 @@ void  Board::clearAllVectors(void){
     }
 }
 
+
+/* clearAllVectors function
+
+Description:
+   This function clears all the maps' values
+*/
 void  Board::clearAllMaps(void){
     whiteAttackCellsMap.clear();
     blackAttackCellsMap.clear();
 }
 
+
+
+/* checkUnprotectedPieces function
+
+Description:
+   Checks unprotected pieces by its own color
+*/
 void  Board::checkUnprotectedPieces(void){
     for(int i = 0 ; i < BOARD_HEIGHT ; i++){
         for(int j= 0 ; j < BOARD_WIDTH ; j++){
@@ -140,6 +165,12 @@ void  Board::checkUnprotectedPieces(void){
     }
 }
 
+
+/* updateVectors function
+
+Description:
+   This function updates all the legal moves , captured moves and threats cell for each piece
+*/
 void  Board::updateVectors(void){
     
     for(int i = 0 ; i < chessBoard.size() ; i++){
@@ -151,6 +182,12 @@ void  Board::updateVectors(void){
     }
 }
 
+
+/* updateMaps function
+
+Description:
+   This function updates all Maps using legal moves vector , captirePieces vector and threatcells vector as well
+*/
 void  Board::updateMaps(void){
     for(int i = 0 ; i < chessBoard.size() ; i++){
         for(int j= 0 ; j < chessBoard[0].size() ; j++){
@@ -227,8 +264,7 @@ void Board::startGame(){
             if(src == "exit")
                     break ;
                 
-         // claculate legal moves and Openent's capture pieces for the selected piece
-//            Piece::analysePieceMovement(src);
+
            if(!Piece::isMovable(src)){
                cout << "This piece can't be moved . Please select another one " <<endl;
                continue;
@@ -247,8 +283,7 @@ void Board::startGame(){
          //change the position of the current piece to a new one on the board
             Piece::move(src, dest);
            
-//        cout << "Unprotectecd Pieces : " << endl ;
-//            checkUnprotectedPieces();
+
 
             displayBoard();
             if(lastColoredMove == "black"){
@@ -266,6 +301,12 @@ void Board::startGame(){
 
 };
 
+
+/* showThreatendCells function
+
+Description:
+   This function list all the cells that are threatend by each color
+*/
 void  Board::showThreatendCells(unordered_map<string ,int>& m){
     for(auto it = m.begin() ; it != m.end() ; it++ ){
         if(it->second != 0 )

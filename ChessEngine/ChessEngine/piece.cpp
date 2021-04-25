@@ -124,7 +124,13 @@ void Piece::calculateLegalAndCaptureMoves(int xIncrement , int yIncremernt , int
     }
 }
 
-
+/* calculateMoves function
+Params:
+ *isWhite : determine the color if it is white or black
+Description:
+   This function calculates Free hanging moves only (not captured )
+   It shows if there are hanging pieces left after every move.
+*/
 void Piece::calculateHangingPieces(bool isWhite){
     
     vector<string> hangingPieces{};
@@ -186,6 +192,12 @@ void Piece::listCaptureOpnentPieces(Piece * p){
 }
 
 
+/* listAllPossibleMoves function
+ Params :
+   * code : This is a board code like a2 , h5 and so on
+Description:
+   This function prints on screen all possible moves for the selected piece
+*/
  void Piece::listAllPossibleMoves(string code){
      pair<int,int> pr  = Board::boardCodeToIndex(code);
      Piece* p = Board::chessBoard[pr.second][pr.first];
@@ -247,11 +259,7 @@ bool Rook::isPinned(){
 
 //-------------------------------------------------------------------------------------------------
 
-/* calculateMoves function
 
-Description:
-   This function calculates all moves (legal and capture) for PAWN
-*/
 Pawn::Pawn(string pos, bool isWhite, string pieceName):Piece{pos, isWhite  ,pieceName}  {
    
 }
@@ -260,7 +268,11 @@ Pawn::~Pawn(){
     
 }
 
+/* calculateMoves function
 
+Description:
+   This function calculates all legal moves (legal and capture) for PAWN
+*/
 void Pawn::calculateLegalPawnMove(int xIncrement , int yIncremernt ){
     int i{}; int j{};
     pair<int,int> pr = Board::boardCodeToIndex(this->position);
@@ -280,7 +292,11 @@ void Pawn::calculateLegalPawnMove(int xIncrement , int yIncremernt ){
     }
 }
 
+/* calculateMoves function
 
+Description:
+   This function calculates all capture moves for PAWN
+*/
 void Pawn::calculateCapturePawnMove(int xIncrement , int yIncremernt){
     int i{}; int j{};
     pair<int,int> pr = Board::boardCodeToIndex(this->position);
@@ -302,6 +318,12 @@ void Pawn::calculateCapturePawnMove(int xIncrement , int yIncremernt){
         
     }
 }
+
+/* calculateMoves function
+
+Description:
+   This function calculates all moves (legal and capture) for PAWN
+*/
 void Pawn::calculateMoves(){
 
     if(this->isWhite){
@@ -342,11 +364,7 @@ bool Pawn::isPinned(){
 
 //-------------------------------------------------------------------------------------------------
 
-/* calculateMoves function
 
-Description:
-   This function calculates all moves (legal and capture) for QUEEN
-*/
 Queen::Queen(string pos, bool isWhite , string pieceName):Piece{pos, isWhite,pieceName}  {
    
 }
@@ -355,6 +373,11 @@ Queen::~Queen(){
     
 }
 
+/* calculateMoves function
+
+Description:
+   This function calculates all moves (legal and capture) for QUEEN
+*/
 void Queen::calculateMoves(){
 
     calculateLegalAndCaptureMoves( 1  , 0   , INT_MAX ,  this);
@@ -377,11 +400,7 @@ bool Queen::isPinned(){
 //-------------------------------------------------------------------------------------------------
 
 
-/* calculateMoves function
 
-Description:
-   This function calculates all moves (legal and capture) for KING
-*/
 King::King(string pos, bool isWhite , string pieceName):Piece{pos, isWhite,pieceName}  {
    
 }
@@ -390,6 +409,11 @@ King::~King(){
     
 }
 
+/* calculateMoves function
+
+Description:
+   This function calculates all moves (legal and capture) for KING
+*/
 void King::calculateMoves(){
         
         calculateLegalAndCaptureMoves( 1  , 0   , 1 ,  this);
@@ -410,11 +434,7 @@ bool King::isPinned(){
 
 //-------------------------------------------------------------------------------------------------
 
-/* calculateMoves function
 
-Description:
-   This function calculates all moves (legal and capture) for KNIGHT
-*/
 Knight::Knight(string pos, bool isWhite , string pieceName):Piece{pos, isWhite,pieceName}  {
    
 }
@@ -423,6 +443,11 @@ Knight::~Knight(){
     
 }
 
+/* calculateMoves function
+
+Description:
+   This function calculates all moves (legal and capture) for KNIGHT
+*/
 void Knight::calculateMoves(){
     
         calculateLegalAndCaptureMoves( 1   , 2   , 1 ,  this);
@@ -443,11 +468,7 @@ bool Knight::isPinned(){
 
 //-------------------------------------------------------------------------------------------------
 
-/* calculateMoves function
 
-Description:
-   This function calculates all moves (legal and capture) for BISHOP
-*/
 Bishop::Bishop(string pos, bool isWhite , string pieceName):Piece{pos, isWhite,pieceName}{
    
 }
@@ -456,6 +477,11 @@ Bishop::~Bishop(){
     
 }
 
+/* calculateMoves function
+
+Description:
+   This function calculates all moves (legal and capture) for BISHOP
+*/
 void Bishop::calculateMoves(){
         calculateLegalAndCaptureMoves( 1  , 1   , INT_MAX ,  this);
         calculateLegalAndCaptureMoves( 1  , -1  , INT_MAX ,  this);
