@@ -21,11 +21,11 @@ void  Board::displayBoard(){
 
  
     cout << "                   " << endl;
-    cout << "   _________________________ " << endl;
+    cout << "  ________________________ " << endl;
 
         
     for(int i = 0 ; i < 8 ; i++){
-        cout << (8 - i ) << " | ";
+        cout << (8 - i ) << "|";
         for(int j = 0 ; j< 8 ; j++){
             
             if(chessBoard[i][j] != NULL){
@@ -37,8 +37,8 @@ void  Board::displayBoard(){
         cout << "|"<< endl ;
     }
     
-    cout << "   ------------------------- "  << endl;
-    cout << "     a  b  c  d  e  f  g  h \n" << endl;
+    cout << "  ------------------------ "  << endl;
+    cout << "   a  b  c  d  e  f  g  h \n" << endl;
     
 };
 
@@ -116,6 +116,7 @@ void  Board::clearAllVectors(void){
                 p->legalMoves.clear();
                 p->captureOpnentCells.clear();
                 p->threatenedCells.clear();
+                p->isProtected = false ;
             }
                 
         }
@@ -125,6 +126,18 @@ void  Board::clearAllVectors(void){
 void  Board::clearAllMaps(void){
     whiteAttackCellsMap.clear();
     blackAttackCellsMap.clear();
+}
+
+void  Board::checkUnprotectedPieces(void){
+    for(int i = 0 ; i < BOARD_HEIGHT ; i++){
+        for(int j= 0 ; j < BOARD_WIDTH ; j++){
+            Piece * p = chessBoard[i][j];
+            if(p != nullptr && !p->isProtected ){
+                cout << p->position << endl ;
+            }
+                
+        }
+    }
 }
 
 void  Board::updateVectors(void){
@@ -233,15 +246,20 @@ void Board::startGame(){
 
          //change the position of the current piece to a new one on the board
             Piece::move(src, dest);
-
+           
+//        cout << "Unprotectecd Pieces : " << endl ;
+//            checkUnprotectedPieces();
 
             displayBoard();
             if(lastColoredMove == "black"){
+                Piece::calculateHangingPieces(true);
                 lastColoredMove = "white";
             }
             else{
+                Piece::calculateHangingPieces(false);
                 lastColoredMove = "black";
             }
+        cout<< "-------------------------------------------------------------------" <<endl ;
     
      
     }

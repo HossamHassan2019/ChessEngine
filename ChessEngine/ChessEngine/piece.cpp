@@ -11,16 +11,15 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include<unordered_map>
 using namespace std ;
 
 
-Piece::Piece(string pos, bool White , string pName ){
-    position = pos;
-    isWhite = White;
-    pieceName = pName;
+Piece::Piece(string pos, bool White , string pName ):position{pos} , isWhite{White} , pieceName{pName}{
     threatenedCells ={};
     captureOpnentCells = {};
     legalMoves = {};
+    isProtected = false; 
 }
 
 Piece::~Piece(){
@@ -56,8 +55,7 @@ void Piece::move(string src , string dest){
     Board::chessBoard[destIndex.second][destIndex.first] = source;
     Board::chessBoard[destIndex.second][destIndex.first]->position = dest;
     
-//    source->captureOpnentCells.clear();
-//    source->legalMoves.clear();
+
     Board::clearAllVectors();
     Board::clearAllMaps();
     Board::updateVectors();
@@ -103,6 +101,12 @@ void Piece::calculateLegalAndCaptureMoves(int xIncrement , int yIncremernt , int
             //register position of cell that can be captured
             (p->captureOpnentCells).push_back(code);
             break;
+            
+        }else if (nextPossibleMove->isWhite == pieceColor){
+            //this means that if the current pience hits any piece which has the same color
+            //this means that the piece that got hit is protected
+            nextPossibleMove->isProtected = true ;
+            break;
         }
         else{
             //means there is no legal move neither capture
@@ -119,6 +123,37 @@ void Piece::calculateLegalAndCaptureMoves(int xIncrement , int yIncremernt , int
 
     }
 }
+
+
+void Piece::calculateHangingPieces(bool isWhite){
+    
+    vector<string> hangingPieces{};
+    unordered_map<string , int>& whiteMap = Board::whiteAttackCellsMap;
+    unordered_map<string , int>& blackMap = Board::blackAttackCellsMap;
+    unordered_map<string, int> &m = whiteMap;
+    if(isWhite == true)
+        m = blackMap ;
+    else if(isWhite == false)
+        m = whiteMap ;
+    for(int i = 0 ; i < Board::chessBoard.size() ; i++){
+        for(int j= 0 ; j < Board::chessBoard[0].size() ; j++){
+            Piece * p = Board::chessBoard[i][j];
+            if(p != nullptr && p->isWhite == isWhite){
+                if(p->isProtected == false && m.find(p->position)!= m.end() )
+//                if(p->isProtected == false)
+                    hangingPieces.push_back(p->position);
+            }
+        }
+    }
+    
+    if(hangingPieces.size() != 0 ){
+        cout<< "This move left hanging pieces : " <<endl ;
+        for(auto p : hangingPieces)
+            cout << p << endl ;
+    }
+    
+    
+};
 
 
 
@@ -207,9 +242,7 @@ void Rook::calculateMoves(){
 bool Rook::isPinned(){
     return false;
 }
-bool Rook::isHanging(){
-    return false;
-}
+
 
 
 //-------------------------------------------------------------------------------------------------
@@ -262,6 +295,8 @@ void Pawn::calculateCapturePawnMove(int xIncrement , int yIncremernt){
         if(nextPossibleMove != nullptr &&( this->isWhite != nextPossibleMove->isWhite)){
              //register legal move
              this->captureOpnentCells.push_back(code);
+        }else if(nextPossibleMove!= nullptr && ( this->isWhite == nextPossibleMove->isWhite)){
+            nextPossibleMove->isProtected = true;
         }else if(nextPossibleMove == nullptr)
              this->threatenedCells.push_back(code);
         
@@ -271,14 +306,26 @@ void Pawn::calculateMoves(){
 
     if(this->isWhite){
         //move forward as a white pawn
-        calculateLegalPawnMove(0,-1);
+        if(this->position[1] == '2'){
+            calculateLegalPawnMove(0,-1);
+            calculateLegalPawnMove(0, -2);
+            
+        }else
+             calculateLegalPawnMove(0,-1);
+        
         //calculate capture moves
         calculateCapturePawnMove(1,-1);
         calculateCapturePawnMove(-1,-1);
         
     }else{
         //move forward as a black pawn
-        calculateLegalPawnMove(0,1);
+        if(this->position[1] == '7'){
+            calculateLegalPawnMove(0,1);
+            calculateLegalPawnMove(0, 2);
+            
+        }else
+            calculateLegalPawnMove(0,1);
+        
         //calculate capture moves
         calculateCapturePawnMove(1,1);
         calculateCapturePawnMove(-1,1);
@@ -290,9 +337,7 @@ void Pawn::calculateMoves(){
 bool Pawn::isPinned(){
     return false;
 }
-bool Pawn::isHanging(){
-    return false;
-}
+
 
 
 //-------------------------------------------------------------------------------------------------
@@ -326,9 +371,7 @@ void Queen::calculateMoves(){
 bool Queen::isPinned(){
     return false;
 }
-bool Queen::isHanging(){
-    return false;
-}
+
 
 
 //-------------------------------------------------------------------------------------------------
@@ -362,9 +405,7 @@ void King::calculateMoves(){
 bool King::isPinned(){
     return false;
 }
-bool King::isHanging(){
-    return false;
-}
+
 
 
 //-------------------------------------------------------------------------------------------------
@@ -397,9 +438,7 @@ void Knight::calculateMoves(){
 bool Knight::isPinned(){
     return false;
 }
-bool Knight::isHanging(){
-    return false;
-}
+
 
 
 //-------------------------------------------------------------------------------------------------
@@ -427,9 +466,7 @@ void Bishop::calculateMoves(){
 bool Bishop::isPinned(){
     return false;
 }
-bool Bishop::isHanging(){
-    return false;
-}
+
 
 
 //-------------------------------------------------------------------------------------------------

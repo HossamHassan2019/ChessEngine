@@ -15,7 +15,7 @@ public:
     vector<string> threatenedCells;
     vector<string> captureOpnentCells;
     vector<string> legalMoves;
-    
+    bool isProtected; 
     static void calculateLegalAndCaptureMoves(int x , int y , int step ,  Piece* );
     static void move(string src , string dest);
     static void analysePieceMovement(string code);
@@ -24,10 +24,10 @@ public:
     static void listAllPossibleMoves(string code);
     static void showCaptureMoves(Piece *);
     static bool isMovable(string code);
+    static void calculateHangingPieces(bool isWhite);
     Piece(string pos , bool White , string pName);
     virtual void calculateMoves() = 0;
     virtual bool isPinned() = 0 ;
-    virtual bool isHanging() = 0 ;
     virtual ~Piece();
     
 };
@@ -41,7 +41,6 @@ public:
     void calculateLegalPawnMove(int , int  );
     void calculateCapturePawnMove(int , int);
     bool isPinned();
-    bool isHanging();
     ~Pawn();
   
 };
@@ -53,7 +52,6 @@ public:
     Rook(string pos, bool isWhite,  string pieceName );
     void calculateMoves();
     bool isPinned();
-    bool isHanging();
     ~Rook();
 };
 
@@ -64,7 +62,6 @@ public:
     Bishop(string pos, bool isWhite,  string pieceName );
     void calculateMoves();
     bool isPinned();
-    bool isHanging();
     ~Bishop();
 };
 
@@ -75,7 +72,6 @@ public:
     Knight(string pos, bool isWhite ,  string pieceName);
     void calculateMoves();
     bool isPinned();
-    bool isHanging();
     ~Knight();
 };
 
@@ -86,7 +82,6 @@ public:
     Queen (string pos, bool isWhite ,  string pieceName);
     void calculateMoves();
     bool isPinned();
-    bool isHanging();
     ~Queen();
 };
 
@@ -97,7 +92,6 @@ public:
     King(string pos, bool isWhite ,  string pieceName);
     void calculateMoves();
     bool isPinned();
-    bool isHanging();
     ~King();
 };
 

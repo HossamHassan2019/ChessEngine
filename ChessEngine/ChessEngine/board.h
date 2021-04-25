@@ -32,6 +32,7 @@ public:
       void static showThreatendCells(unordered_map<string ,int>& m);
       void static clearAllVectors(void);
       void static clearAllMaps(void);
+      void static checkUnprotectedPieces(void);
       pair<int,int> static boardCodeToIndex(string code);
       string static IndexToBoardCode(int j , int i);
 };
