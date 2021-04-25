@@ -130,16 +130,16 @@ void Piece::calculateHangingPieces(bool isWhite){
     vector<string> hangingPieces{};
     unordered_map<string , int>& whiteMap = Board::whiteAttackCellsMap;
     unordered_map<string , int>& blackMap = Board::blackAttackCellsMap;
-    unordered_map<string, int> &m = whiteMap;
+    unordered_map<string, int> *m  = nullptr;
     if(isWhite == true)
-        m = blackMap ;
+        m = &blackMap ;
     else if(isWhite == false)
-        m = whiteMap ;
+        m = &whiteMap ;
     for(int i = 0 ; i < Board::chessBoard.size() ; i++){
         for(int j= 0 ; j < Board::chessBoard[0].size() ; j++){
             Piece * p = Board::chessBoard[i][j];
             if(p != nullptr && p->isWhite == isWhite){
-                if(p->isProtected == false && m.find(p->position)!= m.end() )
+                if(p->isProtected == false && m->find(p->position)!= m->end() )
 //                if(p->isProtected == false)
                     hangingPieces.push_back(p->position);
             }
